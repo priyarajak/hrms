@@ -25,13 +25,11 @@ function Attendance() {
   const res = await API.get(`/attendance/${empId}`)
   let data = res.data
 
-  // Apply date filters
   if (fromDate)
     data = data.filter(r => r.date >= fromDate)
   if (toDate)
     data = data.filter(r => r.date <= toDate)
 
-  // 🔥 Sort newest → oldest
   data.sort((a, b) => new Date(b.date) - new Date(a.date))
 
   setRecords(data)
@@ -116,7 +114,7 @@ function Attendance() {
             </select>
           </div>
 
-          <button className="w-full bg-slate-900 text-white py-2.5 rounded-lg hover:bg-slate-600 transition">
+          <button className="w-full bg-blue-600 text-white py-2.5 rounded-lg hover:bg-slate-600 transition">
             Mark Attendance
           </button>
         </form>
