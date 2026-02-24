@@ -38,11 +38,20 @@ function Employees() {
   }
 
   const deleteEmployee = async (id) => {
-    
+  const confirmDelete = window.confirm(
+    "Are you sure you want to delete this employee?"
+  )
+
+  if (!confirmDelete) return
+
+  try {
     await API.delete(`/employees/${id}`)
-    toast.success("Employee deleted")
+    toast.success("Employee deleted successfully")
     fetchEmployees()
+  } catch (err) {
+    toast.error("Unable to delete employee")
   }
+}
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-10 gap-10">
