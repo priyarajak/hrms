@@ -114,7 +114,7 @@ function Attendance() {
             </select>
           </div>
 
-          <button className="w-full bg-[#9EC5FE] text-white py-2.5 rounded-lg hover:bg-slate-600 transition">
+          <button className="w-full bg-slate-900 text-white py-2.5 rounded-lg hover:bg-slate-600 transition">
             Mark Attendance
           </button>
         </form>
