@@ -54,11 +54,10 @@ function Employees() {
 }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-10 gap-10">
-
+    <div className="grid grid-cols-1 lg:grid-cols-10 gap-6 lg:gap-10 px-4 sm:px-0">
       {/* 30% Form */}
-      <div className="lg:col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-        <h3 className="text-base font-semibold text-slate-700">
+      <div className="lg:col-span-3 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200">
+          <h3 className="text-base font-semibold text-slate-700">
   Add Employee
 </h3>
 <p className="text-xs text-slate-400 mb-6">
@@ -120,7 +119,7 @@ function Employees() {
       </div>
 
       {/* 70% Table */}
-      <div className="lg:col-span-7">
+     <div className="lg:col-span-7 mt-2 lg:mt-0">
         <EmployeeTable
           employees={employees}
           onDelete={deleteEmployee}
