@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import API from "../services/api"
 import toast from "react-hot-toast"
+import Loader from "../components/Loader"
 
 function Attendance() {
   const [employees, setEmployees] = useState([])
@@ -14,26 +15,35 @@ function Attendance() {
   const [fromDate, setFromDate] = useState("")
   const [toDate, setToDate] = useState("")
   const today = new Date().toLocaleDateString("en-CA")
+  const [loading, setLoading] = useState(false)
+  const [empLoading, setEmpLoading] = useState(true)
 
   const fetchEmployees = async () => {
+  setEmpLoading(true)
+  try {
     const res = await API.get("/employees")
     setEmployees(res.data)
+  } catch {
+    toast.error("Failed to load employees")
   }
+  setEmpLoading(false)
+}
 
   const fetchAttendance = async (empId) => {
   if (!empId) return
+  setLoading(true)
+
   const res = await API.get(`/attendance/${empId}`)
   let data = res.data
 
-  if (fromDate)
-    data = data.filter(r => r.date >= fromDate)
-  if (toDate)
-    data = data.filter(r => r.date <= toDate)
+  if (fromDate) data = data.filter(r => r.date >= fromDate)
+  if (toDate) data = data.filter(r => r.date <= toDate)
 
   data.sort((a, b) => new Date(b.date) - new Date(a.date))
 
   setRecords(data)
-  setPresentCount(data.filter(r => r.status==="Present").length)
+  setPresentCount(data.filter(r => r.status === "Present").length)
+  setLoading(false)
 }
 
   const resetForm = () => {
@@ -78,18 +88,25 @@ function Attendance() {
           <div>
             <label className="text-xs text-slate-400">Employee</label>
             <select
-              value={selectedEmp}
-              required
-              onChange={(e)=>setSelectedEmp(e.target.value)}
-              className="w-full mt-1 p-3 rounded-xl border border-slate-200 bg-slate-50"
-            >
-              <option value="" disabled>Select employee</option>
-              {employees.map(emp=>(
-                <option key={emp.employee_id} value={emp.employee_id}>
-                  {emp.name} ({emp.employee_id})
-                </option>
-              ))}
-            </select>
+  value={selectedEmp}
+  required
+  disabled={empLoading}
+  onChange={(e)=>setSelectedEmp(e.target.value)}
+  className="w-full mt-1 p-3 rounded-xl border border-slate-200 bg-slate-50 disabled:bg-slate-100 disabled:text-slate-400"
+>
+  {empLoading ? (
+    <option>Loading employees...</option>
+  ) : (
+    <>
+      <option value="" disabled>Select employee</option>
+      {employees.map(emp=>(
+        <option key={emp.employee_id} value={emp.employee_id}>
+          {emp.name} ({emp.employee_id})
+        </option>
+      ))}
+    </>
+  )}
+</select>
           </div>
 
           <div>
@@ -130,17 +147,24 @@ function Attendance() {
   </div>
 
   <select
-    value={searchEmp}
-    onChange={(e)=>setSearchEmp(e.target.value)}
-    className="w-full p-3 rounded-xl border text-slate-600 bg-white"
-  >
-    <option value="" disabled>Select employee to view attendance records.</option>
-    {employees.map(emp=>(
-      <option key={emp.employee_id} value={emp.employee_id}>
-        {emp.name} ({emp.employee_id})
-      </option>
-    ))}
-  </select>
+  value={searchEmp}
+  disabled={empLoading}
+  onChange={(e)=>setSearchEmp(e.target.value)}
+  className="w-full p-3 rounded-xl border text-slate-600 bg-white disabled:bg-slate-100 disabled:text-slate-400"
+>
+  {empLoading ? (
+    <option>Loading employees...</option>
+  ) : (
+    <>
+      <option value="" disabled>Select employee to view attendance records.</option>
+      {employees.map(emp=>(
+        <option key={emp.employee_id} value={emp.employee_id}>
+          {emp.name} ({emp.employee_id})
+        </option>
+      ))}
+    </>
+  )}
+</select>
 
   {!searchEmp ? (
 
