@@ -64,10 +64,10 @@ function Attendance() {
   useEffect(()=>{ fetchAttendance(searchEmp) },[searchEmp, fromDate, toDate])
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
 
       {/* LEFT CARD */}
-      <div className="lg:col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+      <div className="lg:col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit">
         <h3 className="font-semibold text-slate-800">Mark Attendance</h3>
         <p className="text-sm text-slate-400 mb-6">
           Record attendance for an employee.
@@ -192,8 +192,8 @@ function Attendance() {
 </div>
 
       {/* SUMMARY */}
-      <div className="bg-green-50 border border-green-200 text-green-700 
-          px-5 py-2 rounded-xl flex justify-between ">
+      <div className="bg-gradient-to-r from-green-50 to-emerald-50 
+border border-green-200 text-green-700 px-5 py-3 rounded-xl flex justify-between items-center">
         <span>Attendance Summary</span>
         <span className="bg-green-100 px-3 py-1 rounded-full text-sm">
           {presentCount} days present
