@@ -23,7 +23,8 @@ function EmployeeTable({ employees, onDelete, onRefresh }) {
         </button>
       </div>
 
-      <table className="hidden md:table w-full text-sm">
+      <div className="overflow-x-auto">
+  <table className="w-full text-sm min-w-[650px]">
         <thead className="bg-slate-50 text-slate-500">
           <tr>
             <th className="p-4 text-left">ID</th>
@@ -56,6 +57,7 @@ function EmployeeTable({ employees, onDelete, onRefresh }) {
           ))}
         </tbody>
       </table>
+      </div>
       {/* Mobile Employee Cards */}
 <div className="md:hidden divide-y">
   {employees.map((emp) => (
