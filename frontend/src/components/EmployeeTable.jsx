@@ -23,7 +23,7 @@ function EmployeeTable({ employees, onDelete, onRefresh }) {
         </button>
       </div>
 
-      <table className="w-full text-sm">
+      <table className="hidden md:table w-full text-sm">
         <thead className="bg-slate-50 text-slate-500">
           <tr>
             <th className="p-4 text-left">ID</th>
@@ -56,6 +56,31 @@ function EmployeeTable({ employees, onDelete, onRefresh }) {
           ))}
         </tbody>
       </table>
+      {/* Mobile Employee Cards */}
+<div className="md:hidden divide-y">
+  {employees.map((emp) => (
+    <div key={emp.employee_id} className="p-4 space-y-2">
+
+      <div className="flex justify-between items-start">
+        <div>
+          <p className="font-medium text-slate-800">{emp.name}</p>
+          <p className="text-xs text-slate-400">{emp.employee_id}</p>
+        </div>
+
+        <button
+          onClick={() => onDelete(emp.employee_id)}
+          className="text-red-500"
+        >
+          <Trash2 size={16}/>
+        </button>
+      </div>
+
+      <p className="text-xs text-slate-500">{emp.email}</p>
+      <p className="text-xs text-slate-500">{emp.department}</p>
+
+    </div>
+  ))}
+</div>
     </div>
   )
 }
