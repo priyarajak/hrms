@@ -1,61 +1,50 @@
+import { NavLink, useLocation } from "react-router-dom"
 import { Users, CalendarDays } from "lucide-react"
-import { Link, useLocation } from "react-router-dom"
+import Navbar from "./Navbar"
 
 function Layout({ children }) {
   const location = useLocation()
 
-  const today = new Date().toLocaleDateString("en-US", {
-    weekday: "short",
-    day: "numeric",
-    month: "short",
-  })
-
-  const linkClass = (path) =>
-    `flex items-center gap-2 px-4 py-2 rounded-full text-sm transition ${
-      location.pathname === path
-        ? "bg-indigo-100 text-indigo-600"
-        : "text-slate-500 hover:bg-slate-100"
-    }`
-    const pageInfo = {
-  "/": {
-    title: "Employees",
-    icon: <Users size={18} className="text-indigo-600"/>
-  },
-  "/attendance": {
-    title: "Attendance",
-    icon: <CalendarDays size={18} className="text-indigo-600"/>
-  }
-}
-
-const currentPage = pageInfo[location.pathname]
+  const isActive = (path) => location.pathname === path
 
   return (
-    <div className="min-h-screen bg-slate-100">
-      
-      {/* top bar */}
-      <div className="bg-white border-b px-8 py-4 flex items-center justify-between">
-        
-        <div className="flex items-center gap-2">
-  <div className="bg-indigo-100 p-2 rounded-lg">
-    {currentPage.icon}
-  </div>
-  <h1 className="text-lg font-semibold text-slate-800">
-    {currentPage.title}
-  </h1>
-</div>
-        <div className="flex gap-4">
-          <Link to="/" className={linkClass("/")}>
-            <Users size={16}/> Employees
-          </Link>
-          <Link to="/attendance" className={linkClass("/attendance")}>
-            <CalendarDays size={16}/> Attendance
-          </Link>
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+
+      {/* TOP HEADER */}
+      <Navbar />
+
+      {/* PAGE CONTENT */}
+      <main className="flex-1 px-4 py-5 sm:px-6 md:px-8 pb-28 md:pb-10">
+        {children}
+      </main>
+
+      {/* ⭐ MOBILE BOTTOM NAV (GLOBAL + GUARANTEED) */}
+      <nav className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t shadow-2xl z-50">
+        <div className="flex justify-around py-3">
+
+          <NavLink
+            to="/"
+            className={`flex flex-col items-center text-xs transition ${
+              isActive("/") ? "text-indigo-600" : "text-slate-400"
+            }`}
+          >
+            <Users size={24} />
+            Employees
+          </NavLink>
+
+          <NavLink
+            to="/attendance"
+            className={`flex flex-col items-center text-xs transition ${
+              isActive("/attendance") ? "text-indigo-600" : "text-slate-400"
+            }`}
+          >
+            <CalendarDays size={24} />
+            Attendance
+          </NavLink>
+
         </div>
+      </nav>
 
-        <p className="text-sm text-slate-400">{today}</p>
-      </div>
-
-      <div className="px-4 sm:px-6 py-6 pb-24">{children}</div>
     </div>
   )
 }

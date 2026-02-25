@@ -19,3 +19,7 @@ select:invalid {
 input, select {
   color: #334155; /* slate-700 */
 }
+body {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
