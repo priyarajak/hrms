@@ -189,11 +189,18 @@ function Attendance() {
         From Date
       </label>
       <input
-        type="date"
-        value={fromDate}
-        onChange={(e)=>setFromDate(e.target.value)}
-        className="p-3 rounded-xl border border-slate-200 bg-slate-50"
-      />
+  type="date"
+  value={fromDate}
+  max={today}
+  onChange={(e)=>{
+    setFromDate(e.target.value)
+
+    if (toDate && e.target.value > toDate) {
+      setToDate("")
+    }
+  }}
+  className="p-3 rounded-xl border border-slate-200 bg-slate-50"
+/>
     </div>
 
     <div className="flex flex-col">
@@ -201,11 +208,13 @@ function Attendance() {
         To Date
       </label>
       <input
-        type="date"
-        value={toDate}
-        onChange={(e)=>setToDate(e.target.value)}
-        className="p-3 rounded-xl border border-slate-200 bg-slate-50"
-      />
+  type="date"
+  value={toDate}
+  min={fromDate}     
+  max={today}        
+  onChange={(e)=>setToDate(e.target.value)}
+  className="p-3 rounded-xl border border-slate-200 bg-slate-50"
+/>
     </div>
 
   </div>
