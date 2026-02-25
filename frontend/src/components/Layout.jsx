@@ -55,7 +55,7 @@ const currentPage = pageInfo[location.pathname]
         <p className="text-sm text-slate-400">{today}</p>
       </div>
 
-      <div className="px-6 py-6 pb-20">{children}</div>
+      <div className="px-4 sm:px-6 py-6 pb-24">{children}</div>
     </div>
   )
 }
