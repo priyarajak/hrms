@@ -124,15 +124,12 @@ function Employees() {
 
       {/* 70% Table */}
      <div className="lg:col-span-7 mt-2 lg:mt-0">
-        {loading ? (
-  <Loader />
-) : (
-  <EmployeeTable
-    employees={employees}
-    onDelete={deleteEmployee}
-    onRefresh={fetchEmployees}
-  />
-)}
+        <EmployeeTable
+  employees={employees}
+  onDelete={deleteEmployee}
+  onRefresh={fetchEmployees}
+  loading={loading}
+/>
       </div>
 
     </div>

@@ -1,6 +1,7 @@
 import { Trash2, RefreshCw } from "lucide-react"
+import Loader from "./Loader"
 
-function EmployeeTable({ employees, onDelete, onRefresh }) {
+function EmployeeTable({ employees, onDelete, onRefresh, loading }) {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-200">
 
@@ -38,34 +39,48 @@ function EmployeeTable({ employees, onDelete, onRefresh }) {
           </thead>
 
           <tbody>
-            {employees.map((emp) => (
-              <tr
-                key={emp.employee_id}
-                className="border-t border-slate-100 hover:bg-slate-50 transition"
-              >
-                <td className="p-4 text-slate-700 whitespace-nowrap">
-                  {emp.employee_id}
-                </td>
-                <td className="p-4 text-slate-700 whitespace-nowrap">
-                  {emp.name}
-                </td>
-                <td className="p-4 text-slate-500 whitespace-nowrap">
-                  {emp.email}
-                </td>
-                <td className="p-4 text-slate-500 whitespace-nowrap">
-                  {emp.department}
-                </td>
-                <td className="p-4 whitespace-nowrap">
-                  <button
-                    onClick={() => onDelete(emp.employee_id)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {loading ? (
+    <tr>
+      <td colSpan="5">
+        <Loader />
+      </td>
+    </tr>
+  ) : employees.length === 0 ? (
+    <tr>
+      <td colSpan="5" className="text-center py-10 text-slate-400">
+        No employees found
+      </td>
+    </tr>
+  ) : (
+    employees.map((emp) => (
+      <tr
+        key={emp.employee_id}
+        className="border-t border-slate-100 hover:bg-slate-50 transition"
+      >
+        <td className="p-4 text-slate-700 whitespace-nowrap">
+          {emp.employee_id}
+        </td>
+        <td className="p-4 text-slate-700 whitespace-nowrap">
+          {emp.name}
+        </td>
+        <td className="p-4 text-slate-500 whitespace-nowrap">
+          {emp.email}
+        </td>
+        <td className="p-4 text-slate-500 whitespace-nowrap">
+          {emp.department}
+        </td>
+        <td className="p-4 whitespace-nowrap">
+          <button
+            onClick={() => onDelete(emp.employee_id)}
+            className="text-red-500 hover:text-red-700"
+          >
+            <Trash2 size={16} />
+          </button>
+        </td>
+      </tr>
+    ))
+  )}
+</tbody>
         </table>
       </div>
 
