@@ -64,7 +64,7 @@ function Attendance() {
   useEffect(()=>{ fetchAttendance(searchEmp) },[searchEmp, fromDate, toDate])
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-10 gap-8">
+    <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
 
       {/* LEFT CARD */}
       <div className="lg:col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
