@@ -62,6 +62,34 @@ function Navbar() {
           </Link>
         </div>
       )}
+      {/* MOBILE BOTTOM NAV */}
+<div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg z-50">
+  <div className="flex justify-around py-2 text-xs">
+
+    <Link
+      to="/"
+      className={`flex flex-col items-center ${
+        location.pathname === "/" ? "text-indigo-600" : "text-slate-400"
+      }`}
+    >
+      👥
+      <span>Employees</span>
+    </Link>
+
+    <Link
+      to="/attendance"
+      className={`flex flex-col items-center ${
+        location.pathname === "/attendance"
+          ? "text-indigo-600"
+          : "text-slate-400"
+      }`}
+    >
+      📅
+      <span>Attendance</span>
+    </Link>
+
+  </div>
+</div>
     </div>
   )
 }
