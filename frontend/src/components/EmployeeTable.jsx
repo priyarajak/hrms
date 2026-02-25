@@ -1,5 +1,6 @@
 import { Trash2, RefreshCw } from "lucide-react"
 import Loader from "./Loader"
+import TableSkeleton from "./TableSkeleton"
 
 function EmployeeTable({ employees, onDelete, onRefresh, loading }) {
   return (
@@ -40,11 +41,7 @@ function EmployeeTable({ employees, onDelete, onRefresh, loading }) {
 
           <tbody>
   {loading ? (
-    <tr>
-      <td colSpan="5">
-        <Loader />
-      </td>
-    </tr>
+    <TableSkeleton/>
   ) : employees.length === 0 ? (
     <tr>
       <td colSpan="5" className="text-center py-10 text-slate-400">
