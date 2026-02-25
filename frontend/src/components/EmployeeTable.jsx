@@ -6,14 +6,13 @@ function EmployeeTable({ employees, onDelete, onRefresh, loading }) {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-200">
 
-      {/* Header */}
       <div className="flex justify-between items-center p-4 sm:p-6 border-b border-slate-200">
         <div>
           <h3 className="font-semibold text-slate-700">
             Employee Directory
           </h3>
           <p className="text-xs text-slate-400 mt-1">
-            {loading? "Loading employees..." : `${employees.length} registered employees`}
+            {loading? "Loading employees..." : `Total Employees = ${employees.length} `}
           </p>
         </div>
 
@@ -26,7 +25,6 @@ function EmployeeTable({ employees, onDelete, onRefresh, loading }) {
         </button>
       </div>
 
-      {/* Scrollable Table */}
       <div className="overflow-x-auto">
         <table className="w-full min-w-[650px] text-sm">
           <thead className="bg-slate-50 text-slate-500">

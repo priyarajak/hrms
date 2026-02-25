@@ -15,13 +15,11 @@ function Navbar() {
 
   return (
     <>
-      {/* ================= MOBILE HEADER ================= */}
       <header className="bg-gray-900 text-white px-4 py-4 flex justify-between items-center md:hidden">
         <h1 className="text-lg font-semibold">{pageTitle}</h1>
         <span className="text-xs text-gray-300">{today}</span>
       </header>
 
-      {/* ================= DESKTOP NAVBAR ================= */}
       <header className="hidden md:flex justify-between items-center px-8 py-5 bg-white border-b">
         <h1 className="text-xl font-semibold text-slate-800">
           HRMS Lite

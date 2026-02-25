@@ -5,12 +5,9 @@ from app.models import employee_helper
 
 router = APIRouter()
 
-# ➜ ADD EMPLOYEE
-
 
 @router.post("/")
 async def add_employee(employee: EmployeeCreate):
-    # Check duplicate employee_id
     existing_emp = await employee_collection.find_one(
         {"employee_id": employee.employee_id}
     )
@@ -18,7 +15,6 @@ async def add_employee(employee: EmployeeCreate):
         raise HTTPException(status_code=400,
                             detail="Employee ID already exists")
 
-    # Check duplicate email
     existing_email = await employee_collection.find_one(
         {"email": employee.email}
     )
@@ -31,7 +27,6 @@ async def add_employee(employee: EmployeeCreate):
     return employee_helper(created_employee)
 
 
-# ➜ GET ALL EMPLOYEES
 @router.get("/")
 async def get_employees():
     employees = []
@@ -40,7 +35,6 @@ async def get_employees():
     return employees
 
 
-# ➜ DELETE EMPLOYEE
 @router.delete("/{employee_id}")
 async def delete_employee(employee_id: str):
     result = await employee_collection.delete_one({"employee_id": employee_id})
