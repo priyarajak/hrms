@@ -39,7 +39,6 @@ async def mark_attendance(record: AttendanceCreate):
     return attendance_helper(created_record)
 
 
-# ➜ GET ATTENDANCE BY EMPLOYEE
 @router.get("/{employee_id}")
 async def get_attendance(employee_id: str):
     records = []

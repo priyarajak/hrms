@@ -10,15 +10,12 @@ function Layout({ children }) {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
 
-      {/* TOP HEADER */}
       <Navbar />
 
-      {/* PAGE CONTENT */}
       <main className="flex-1 px-4 py-5 sm:px-6 md:px-8 pb-28 md:pb-10">
         {children}
       </main>
 
-      {/* ⭐ MOBILE BOTTOM NAV (GLOBAL + GUARANTEED) */}
       <nav className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t shadow-2xl z-50">
         <div className="flex justify-around py-3">
 

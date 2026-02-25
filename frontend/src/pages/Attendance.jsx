@@ -168,7 +168,6 @@ function Attendance() {
 
   {!searchEmp ? (
 
-    /* EMPTY STATE */
     <div className="bg-white rounded-2xl border border-slate-200 
         flex flex-col items-center justify-center py-20 text-center">
       <div className="bg-slate-100 p-4 rounded-full mb-4">
@@ -182,11 +181,10 @@ function Attendance() {
   ) : (
 
     <>
-      {/* DATE FILTERS */}
+      
 <div className=" rounded-2xl p-1">
   <div className="grid grid-cols-2 gap-6 text-sm">
 
-    {/* FROM DATE */}
     <div className="flex flex-col">
       <label className="text-m text-slate-400 mb-1">
         From Date
@@ -199,7 +197,6 @@ function Attendance() {
       />
     </div>
 
-    {/* TO DATE */}
     <div className="flex flex-col">
       <label className="text-m text-slate-400 mb-1">
         To Date
@@ -215,7 +212,6 @@ function Attendance() {
   </div>
 </div>
 
-      {/* SUMMARY */}
       <div className="bg-gradient-to-r from-green-50 to-emerald-50 
 border border-green-200 text-green-700 px-5 py-3 rounded-xl flex justify-between items-center">
         <span>Attendance Summary</span>
@@ -224,7 +220,6 @@ border border-green-200 text-green-700 px-5 py-3 rounded-xl flex justify-between
         </span>
       </div>
 
-      {/* TABLE */}
       <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
 
         <div className="grid grid-cols-2 bg-slate-50 text-slate-500 text-xs p-4">
