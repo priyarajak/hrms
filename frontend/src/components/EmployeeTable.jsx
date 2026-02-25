@@ -12,7 +12,7 @@ function EmployeeTable({ employees, onDelete, onRefresh, loading }) {
             Employee Directory
           </h3>
           <p className="text-xs text-slate-400 mt-1">
-            {employees.length} registered employees
+            {loading? "Loading employees..." : `${employees.length} registered employees`}
           </p>
         </div>
 
