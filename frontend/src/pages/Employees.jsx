@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import API from "../services/api"
 import EmployeeTable from "../components/EmployeeTable"
 import toast from "react-hot-toast"
+import Loader from "../components/Loader"
 
 function Employees() {
   const [employees, setEmployees] = useState([])
@@ -11,11 +12,14 @@ function Employees() {
     email: "",
     department: "",
   })
+  const [loading, setLoading] = useState(true)
 
   const fetchEmployees = async () => {
-    const res = await API.get("/employees")
-    setEmployees(res.data)
-  }
+  setLoading(true)
+  const res = await API.get("/employees")
+  setEmployees(res.data)
+  setLoading(false)
+}
 
   useEffect(() => {
     fetchEmployees()
@@ -120,11 +124,15 @@ function Employees() {
 
       {/* 70% Table */}
      <div className="lg:col-span-7 mt-2 lg:mt-0">
-        <EmployeeTable
-          employees={employees}
-          onDelete={deleteEmployee}
-          onRefresh={fetchEmployees}
-        />
+        {loading ? (
+  <Loader />
+) : (
+  <EmployeeTable
+    employees={employees}
+    onDelete={deleteEmployee}
+    onRefresh={fetchEmployees}
+  />
+)}
       </div>
 
     </div>
