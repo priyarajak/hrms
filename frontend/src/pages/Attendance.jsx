@@ -76,7 +76,6 @@ function Attendance() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
 
-      {/* LEFT CARD */}
       <div className="lg:col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit">
         <h3 className="font-semibold text-slate-800">Mark Attendance</h3>
         <p className="text-sm text-slate-400 mb-6">
@@ -117,7 +116,7 @@ function Attendance() {
   max={today}
   value={date}
   onChange={(e)=>setDate(e.target.value)}
-  className="w-full mt-1 p-3 rounded-xl border border-slate-200 bg-slate-50"
+  className="w-full mt-1 h-11 px-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 text-sm appearance-none"
 />
           </div>
 
