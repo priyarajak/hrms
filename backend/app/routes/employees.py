@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.database import employee_collection
+from app.database import employee_collection, attendance_collection
 from app.schemas import EmployeeCreate
 from app.models import employee_helper
 
@@ -38,7 +38,10 @@ async def get_employees():
 @router.delete("/{employee_id}")
 async def delete_employee(employee_id: str):
     result = await employee_collection.delete_one({"employee_id": employee_id})
-    if result.deleted_count == 0:
-        raise HTTPException(status_code=404, detail="Employee not found")
 
-    return {"message": "Employee deleted successfully"}
+    if result.deleted_count == 0:
+        return {"message": "Employee not found"}
+
+    await attendance_collection.delete_many({"employee_id": employee_id})
+
+    return {"message": "Employee and attendance deleted successfully"}
