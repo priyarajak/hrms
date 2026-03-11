@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.database import attendance_collection, employee_collection
 from app.schemas import AttendanceCreate
 from app.models import attendance_helper
-from datetime import datetime, timedelta
+from datetime import datetime, timezone, timedelta
 
 router = APIRouter()
 
@@ -43,9 +43,8 @@ async def mark_attendance(record: AttendanceCreate):
 @router.get("/today/present-count")
 async def get_present_today():
 
-    # convert UTC → IST
-    today = (datetime.utcnow() + 
-             timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d")
+    ist = timezone(timedelta(hours=5, minutes=30))
+    today = datetime.now(ist).strftime("%Y-%m-%d")
 
     count = await attendance_collection.count_documents(
         {"date": today, "status": "Present"}
