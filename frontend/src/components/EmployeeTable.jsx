@@ -26,7 +26,7 @@ function EmployeeTable({ employees, onDelete, onRefresh, loading }) {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[650px] text-sm">
+        <table className="w-full min-w-[650px] text-sm"> {/*style Changes*/}
           <thead className="bg-slate-50 text-slate-500">
             <tr>
               <th className="p-4 text-left">ID</th>
