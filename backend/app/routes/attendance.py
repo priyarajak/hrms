@@ -48,8 +48,16 @@ async def get_present_today():
     count = 0
 
     async for rec in attendance_collection.find():
+
+        print("Checking record:", rec)
+
         if rec["status"] == "Present" and rec["date"] == today:
+            print("MATCH FOUND:", rec["employee_id"])
             count += 1
+        else:
+            print("NOT MATCH:", rec["employee_id"], rec["date"], rec["status"])
+
+    print("FINAL COUNT:", count)
 
     return {"present_today": count}
 
