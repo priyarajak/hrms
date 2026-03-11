@@ -42,11 +42,16 @@ async def mark_attendance(record: AttendanceCreate):
 
 @router.get("/today/present-count")
 async def get_present_today():
+
     today = date.today().isoformat()
 
-    count = await attendance_collection.count_documents(
-        {"date": today, "status": "Present"}
-    )
+    records = attendance_collection.find({"status": "Present"})
+
+    count = 0
+
+    async for rec in records:
+        if str(rec["date"])[:10] == today:
+            count += 1
 
     return {"present_today": count}
 
