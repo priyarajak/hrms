@@ -101,6 +101,3 @@ MongoDB Atlas
 
 ### 1️⃣ Clone Repo
 
-```bash
-git clone https://github.com/YOUR_USERNAME/hrms.git
-cd hrms
