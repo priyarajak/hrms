@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.database import attendance_collection, employee_collection
 from app.schemas import AttendanceCreate
 from app.models import attendance_helper
+from datetime import date
 
 router = APIRouter()
 
@@ -37,6 +38,17 @@ async def mark_attendance(record: AttendanceCreate):
     )
 
     return attendance_helper(created_record)
+
+
+@router.get("/today/present-count")
+async def get_present_today():
+    today = date.today().isoformat()
+
+    count = await attendance_collection.count_documents(
+        {"date": today, "status": "Present"}
+    )
+
+    return {"present_today": count}
 
 
 @router.get("/{employee_id}")

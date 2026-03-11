@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react"
 import API from "../services/api"
 import toast from "react-hot-toast"
-import Loader from "../components/Loader"
 
 function Attendance() {
+
   const [employees, setEmployees] = useState([])
   const [selectedEmp, setSelectedEmp] = useState("")
   const [date, setDate] = useState("")
@@ -14,37 +14,41 @@ function Attendance() {
   const [presentCount, setPresentCount] = useState(0)
   const [fromDate, setFromDate] = useState("")
   const [toDate, setToDate] = useState("")
+
   const today = new Date().toLocaleDateString("en-CA")
+
   const [loading, setLoading] = useState(false)
   const [empLoading, setEmpLoading] = useState(true)
 
   const fetchEmployees = async () => {
-  setEmpLoading(true)
-  try {
-    const res = await API.get("/employees")
-    setEmployees(res.data)
-  } catch {
-    toast.error("Failed to load employees")
+    setEmpLoading(true)
+    try {
+      const res = await API.get("/employees")
+      setEmployees(res.data)
+    } catch {
+      toast.error("Failed to load employees")
+    }
+    setEmpLoading(false)
   }
-  setEmpLoading(false)
-}
 
   const fetchAttendance = async (empId) => {
-  if (!empId) return
-  setLoading(true)
+    if (!empId) return
 
-  const res = await API.get(`/attendance/${empId}`)
-  let data = res.data
+    setLoading(true)
 
-  if (fromDate) data = data.filter(r => r.date >= fromDate)
-  if (toDate) data = data.filter(r => r.date <= toDate)
+    const res = await API.get(`/attendance/${empId}`)
+    let data = res.data
 
-  data.sort((a, b) => new Date(b.date) - new Date(a.date))
+    if (fromDate) data = data.filter(r => r.date >= fromDate)
+    if (toDate) data = data.filter(r => r.date <= toDate)
 
-  setRecords(data)
-  setPresentCount(data.filter(r => r.status === "Present").length)
-  setLoading(false)
-}
+    data.sort((a, b) => new Date(b.date) - new Date(a.date))
+
+    setRecords(data)
+    setPresentCount(data.filter(r => r.status === "Present").length)
+
+    setLoading(false)
+  }
 
   const resetForm = () => {
     setSelectedEmp("")
@@ -54,207 +58,301 @@ function Attendance() {
 
   const markAttendance = async (e) => {
     e.preventDefault()
+
     try {
-  await API.post("/attendance", {
-    employee_id: selectedEmp,
-    date,
-    status,
-  })
 
-  toast.success("Attendance marked")
-  fetchAttendance(searchEmp || selectedEmp)
-  resetForm()
+      await API.post("/attendance", {
+        employee_id: selectedEmp,
+        date,
+        status,
+      })
 
-} catch (err) {
-  toast.error(err.response?.data?.detail || "Error marking attendance")
-}
+      toast.success("Attendance marked")
+
+      fetchAttendance(searchEmp || selectedEmp)
+
+      resetForm()
+
+    } catch (err) {
+
+      toast.error(err.response?.data?.detail || "Error marking attendance")
+
+    }
   }
 
-  useEffect(()=>{ fetchEmployees() },[])
-  useEffect(()=>{ fetchAttendance(searchEmp) },[searchEmp, fromDate, toDate])
+  useEffect(() => { fetchEmployees() }, [])
+  useEffect(() => { fetchAttendance(searchEmp) }, [searchEmp, fromDate, toDate])
+
+  const employee = employees.find(e => e.employee_id === searchEmp)
+
+  const totalDays = records.length
+  const attendanceRate = totalDays ? Math.round((presentCount / totalDays) * 100) : 0
 
   return (
+
     <div className="grid grid-cols-1 lg:grid-cols-10 gap-6">
 
+      {/* LEFT FORM */}
       <div className="lg:col-span-3 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit">
+
         <h3 className="font-semibold text-slate-800">Mark Attendance</h3>
+
         <p className="text-sm text-slate-400 mb-6">
-          Record attendance for an employee.
+          Record attendance for an employee
         </p>
 
         <form onSubmit={markAttendance} className="space-y-4 text-sm">
 
           <div>
             <label className="text-xs text-slate-400">Employee</label>
+
             <select
-  value={selectedEmp}
-  required
-  disabled={empLoading}
-  onChange={(e)=>setSelectedEmp(e.target.value)}
-  className="w-full mt-1 p-3 rounded-xl border border-slate-200 bg-slate-50 disabled:bg-slate-100 disabled:text-slate-400"
->
-  {empLoading ? (
-    <option>Loading employees...</option>
-  ) : (
-    <>
-      <option value="" disabled>Select employee</option>
-      {employees.map(emp=>(
-        <option key={emp.employee_id} value={emp.employee_id}>
-          {emp.name} ({emp.employee_id})
-        </option>
-      ))}
-    </>
-  )}
-</select>
-          </div>
+              value={selectedEmp}
+              required
+              disabled={empLoading}
+              onChange={(e)=>setSelectedEmp(e.target.value)}
+              className="w-full mt-1 p-3 rounded-xl border border-slate-200 bg-slate-50 disabled:bg-slate-100"
+            >
+              {empLoading
+                ? <option>Loading employees...</option>
+                : <>
+                    <option value="" disabled>Select employee</option>
 
-          <div>
-            <label className="text-xs text-slate-400">Date</label>
-            <input
-  type="date"
-  required
-  max={today}
-  value={date}
-  onChange={(e)=>setDate(e.target.value)}
-  className="w-full mt-1 h-11 px-3 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 text-sm appearance-none"
-/>
-          </div>
+                    {employees.map(emp => (
+                      <option key={emp.employee_id} value={emp.employee_id}>
+                        {emp.name} ({emp.employee_id})
+                      </option>
+                    ))}
 
-          <div>
-            <label className="text-xs text-slate-400">Status</label>
-            <select value={status}
-              onChange={(e)=>setStatus(e.target.value)}
-              className="w-full mt-1 p-3 rounded-xl border border-slate-200 bg-slate-50">
-              <option>Present</option>
-              <option>Absent</option>
+                  </>
+              }
             </select>
           </div>
 
-          <button className="w-full bg-slate-900 text-white py-2.5 rounded-lg hover:bg-slate-600 transition">
+          <div>
+
+            <label className="text-xs text-slate-400">Date</label>
+
+            <input
+              type="date"
+              required
+              max={today}
+              value={date}
+              onChange={(e)=>setDate(e.target.value)}
+              className="w-full mt-1 h-11 px-3 rounded-xl border border-slate-200 bg-slate-50"
+            />
+
+          </div>
+
+          <div>
+
+            <label className="text-xs text-slate-400">Status</label>
+
+            <select
+              value={status}
+              onChange={(e)=>setStatus(e.target.value)}
+              className="w-full mt-1 p-3 rounded-xl border border-slate-200 bg-slate-50"
+            >
+              <option>Present</option>
+              <option>Absent</option>
+            </select>
+
+          </div>
+
+          <button className="w-full bg-slate-900 text-white py-2.5 rounded-lg hover:bg-slate-700 transition">
             Mark Attendance
           </button>
+
         </form>
+
       </div>
 
+
+      {/* RIGHT PANEL */}
       <div className="lg:col-span-7 space-y-6">
 
-  <div>
-    <h3 className="font-semibold text-slate-800">Attendance History</h3>
-    <p className="text-sm text-slate-400">
-      Select an employee to view attendance details
-    </p>
-  </div>
+        <div>
 
-  <select
-  value={searchEmp}
-  disabled={empLoading}
-  onChange={(e)=>setSearchEmp(e.target.value)}
-  className="w-full p-3 rounded-xl border text-slate-600 bg-white disabled:bg-slate-100 disabled:text-slate-400"
->
-  {empLoading ? (
-    <option>Loading employees...</option>
-  ) : (
-    <>
-      <option value="" disabled>Select employee to view attendance records.</option>
-      {employees.map(emp=>(
-        <option key={emp.employee_id} value={emp.employee_id}>
-          {emp.name} ({emp.employee_id})
-        </option>
-      ))}
-    </>
-  )}
-</select>
+          <h3 className="font-semibold text-slate-800">
+            Attendance History
+          </h3>
 
-  {!searchEmp ? (
+          <p className="text-sm text-slate-400">
+            Select an employee to view attendance records
+          </p>
 
-    <div className="bg-white rounded-2xl border border-slate-200 
-        flex flex-col items-center justify-center py-20 text-center">
-      <div className="bg-slate-100 p-4 rounded-full mb-4">
-        📅
-      </div>
-      <p className="text-slate-400 text-sm">
-        Select an employee above to view history
-      </p>
-    </div>
-
-  ) : (
-
-    <>
-      
-<div className=" rounded-2xl p-1">
-  <div className="grid grid-cols-2 gap-6 text-sm">
-
-    <div className="flex flex-col">
-      <label className="text-m text-slate-400 mb-1">
-        From Date
-      </label>
-      <input
-  type="date"
-  value={fromDate}
-  max={today}
-  onChange={(e)=>{
-    setFromDate(e.target.value)
-
-    if (toDate && e.target.value > toDate) {
-      setToDate("")
-    }
-  }}
-  className="p-3 rounded-xl border border-slate-200 bg-slate-50"
-/>
-    </div>
-
-    <div className="flex flex-col">
-      <label className="text-m text-slate-400 mb-1">
-        To Date
-      </label>
-      <input
-  type="date"
-  value={toDate}
-  min={fromDate}     
-  max={today}        
-  onChange={(e)=>setToDate(e.target.value)}
-  className="p-3 rounded-xl border border-slate-200 bg-slate-50"
-/>
-    </div>
-
-  </div>
-</div>
-
-      <div className="bg-gradient-to-r from-green-50 to-emerald-50 
-border border-green-200 text-green-700 px-5 py-3 rounded-xl flex justify-between items-center">
-        <span>Attendance Summary</span>
-        <span className="bg-green-100 px-3 py-1 rounded-full text-sm">
-          {presentCount} days present
-        </span>
-      </div>
-
-      <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-
-        <div className="grid grid-cols-2 bg-slate-50 text-slate-500 text-xs p-4">
-          <span>DATE</span>
-          <span>STATUS</span>
         </div>
 
-        {records.map(r=>(
-          <div key={r.id} className="grid grid-cols-2 p-4 border-t text-sm">
-            <span className="text-slate-600">{r.date}</span>
+        {/* SELECT EMPLOYEE */}
+        <select
+          value={searchEmp}
+          disabled={empLoading}
+          onChange={(e)=>setSearchEmp(e.target.value)}
+          className="w-full p-3 rounded-xl border text-slate-600 bg-white"
+        >
 
-            {r.status==="Present" ? (
-              <span className="text-green-600 bg-green-100 border border-green-200 px-3 py-1 rounded-full w-fit">
-                Present
-              </span>
-            ) : (
-              <span className="text-red-600 bg-red-100 border border-red-200 px-3 py-1 rounded-full w-fit">
-                Absent
-              </span>
-            )}
+          {empLoading
+            ? <option>Loading employees...</option>
+            : <>
+                <option value="" disabled>
+                  Select employee to view attendance records
+                </option>
+
+                {employees.map(emp=>(
+                  <option key={emp.employee_id} value={emp.employee_id}>
+                    {emp.name} ({emp.employee_id})
+                  </option>
+                ))}
+
+              </>
+          }
+
+        </select>
+
+
+        {!searchEmp ? (
+
+          <div className="bg-white rounded-2xl border border-slate-200 flex flex-col items-center justify-center py-20 text-center">
+
+            <div className="bg-slate-100 p-4 rounded-full mb-4">
+              📅
+            </div>
+
+            <p className="text-slate-400 text-sm">
+              Select an employee to view attendance history
+            </p>
+
           </div>
-        ))}
+
+        ) : (
+
+          <>
+            {/* EMPLOYEE INFO */}
+            <div className="bg-white border border-slate-200 rounded-xl p-4">
+
+              <p className="font-semibold text-slate-800">
+                {employee?.name}
+              </p>
+
+              <p className="text-xs text-slate-400">
+                {employee?.department}
+              </p>
+
+            </div>
+
+
+            {/* DATE FILTERS */}
+            <div className="grid grid-cols-2 gap-6 text-sm">
+
+              <div className="flex flex-col">
+
+                <label className="text-slate-400 mb-1 text-xs">
+                  From Date
+                </label>
+
+                <input
+                  type="date"
+                  value={fromDate}
+                  max={today}
+                  onChange={(e)=>{
+
+                    setFromDate(e.target.value)
+
+                    if (toDate && e.target.value > toDate)
+                      setToDate("")
+
+                  }}
+                  className="p-3 rounded-xl border border-slate-200 bg-slate-50"
+                />
+
+              </div>
+
+              <div className="flex flex-col">
+
+                <label className="text-slate-400 mb-1 text-xs">
+                  To Date
+                </label>
+
+                <input
+                  type="date"
+                  value={toDate}
+                  min={fromDate}
+                  max={today}
+                  onChange={(e)=>setToDate(e.target.value)}
+                  className="p-3 rounded-xl border border-slate-200 bg-slate-50"
+                />
+
+              </div>
+
+            </div>
+
+
+            {/* SUMMARY */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4 flex justify-between">
+
+              <div>
+                <p className="text-xs text-green-700">
+                  Attendance Summary
+                </p>
+
+                <p className="text-sm text-green-800 font-medium">
+                  {presentCount} / {totalDays} days present
+                </p>
+              </div>
+
+              <div className="text-right">
+                <p className="text-xs text-green-700">
+                  Attendance Rate
+                </p>
+
+                <p className="font-semibold text-green-800">
+                  {attendanceRate}%
+                </p>
+              </div>
+
+            </div>
+
+
+            {/* TABLE */}
+            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+
+              <div className="grid grid-cols-2 bg-slate-50 text-slate-500 text-xs p-4">
+                <span>Date</span>
+                <span>Status</span>
+              </div>
+
+              {records.map(r => (
+
+                <div key={r.id} className="grid grid-cols-2 p-4 border-t text-sm">
+
+                  <span className="text-slate-600">
+                    {r.date}
+                  </span>
+
+                  {r.status === "Present"
+
+                    ? <span className="text-green-600 bg-green-100 border border-green-200 px-3 py-1 rounded-full w-fit">
+                        Present
+                      </span>
+
+                    : <span className="text-red-600 bg-red-100 border border-red-200 px-3 py-1 rounded-full w-fit">
+                        Absent
+                      </span>
+
+                  }
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </>
+
+        )}
 
       </div>
-    </>
-  )}
-</div>
+
     </div>
   )
 }

@@ -19,4 +19,4 @@ app.include_router(attendance.router,
 
 @app.get("/")
 def root():
-    return {"message": "HRMS Lite API running"} #running
+    return {"message": "HRMS Lite API running"}
