@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.database import attendance_collection, employee_collection
 from app.schemas import AttendanceCreate
 from app.models import attendance_helper
-from datetime import date
+from datetime import datetime, timedelta
 
 router = APIRouter()
 
@@ -43,21 +43,13 @@ async def mark_attendance(record: AttendanceCreate):
 @router.get("/today/present-count")
 async def get_present_today():
 
-    today = date.today().isoformat()
+    # convert UTC → IST
+    today = (datetime.utcnow() + 
+             timedelta(hours=5, minutes=30)).strftime("%Y-%m-%d")
 
-    count = 0
-
-    async for rec in attendance_collection.find():
-
-        print("Checking record:", rec)
-
-        if rec["status"] == "Present" and rec["date"] == today:
-            print("MATCH FOUND:", rec["employee_id"])
-            count += 1
-        else:
-            print("NOT MATCH:", rec["employee_id"], rec["date"], rec["status"])
-
-    print("FINAL COUNT:", count)
+    count = await attendance_collection.count_documents(
+        {"date": today, "status": "Present"}
+    )
 
     return {"present_today": count}
 
