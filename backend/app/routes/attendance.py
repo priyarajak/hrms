@@ -45,12 +45,10 @@ async def get_present_today():
 
     today = date.today().isoformat()
 
-    records = attendance_collection.find({"status": "Present"})
-
     count = 0
 
-    async for rec in records:
-        if str(rec["date"])[:10] == today:
+    async for rec in attendance_collection.find():
+        if rec["status"] == "Present" and rec["date"] == today:
             count += 1
 
     return {"present_today": count}
