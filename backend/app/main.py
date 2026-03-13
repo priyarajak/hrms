@@ -4,13 +4,18 @@ from app.routes import employees, attendance
 
 app = FastAPI(title="HRMS Lite API")
 
+origins = [
+    "http://localhost:5173",
+    "https://hrms-ten-ruddy.vercel.app",
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 app.include_router(employees.router, prefix="/employees", tags=["Employees"])
 app.include_router(attendance.router, 
